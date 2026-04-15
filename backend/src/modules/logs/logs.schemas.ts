@@ -2,13 +2,17 @@ import { z } from "zod";
 
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
-const optionalTrimmedString = z
-  .string()
-  .trim()
-  .min(1)
-  .max(500)
-  .optional()
-  .or(z.literal("").transform(() => undefined));
+const optionalTrimmedString = z.preprocess(
+  (value: unknown) => {
+    if (typeof value !== "string") {
+      return value;
+    }
+
+    const trimmed = value.trim();
+    return trimmed === "" ? undefined : trimmed;
+  },
+  z.string().max(500).optional()
+);
 
 export const createDailyLogSchema = z.object({
   date: z.string().regex(datePattern, "Date must use YYYY-MM-DD format"),

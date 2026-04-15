@@ -1,6 +1,7 @@
 import type { Server as HttpServer } from "node:http";
 import { Server } from "socket.io";
 import { env } from "../config/env.js";
+import { logInfo } from "../utils/logger.js";
 
 export const DASHBOARD_UPDATED_EVENT = "dashboard:updated";
 
@@ -15,8 +16,19 @@ export function createSocketServer(httpServer: HttpServer) {
   });
 
   io.on("connection", (socket) => {
+    logInfo("socket_connected", {
+      socketId: socket.id
+    });
+
     socket.emit("connection:ready", {
       message: "Realtime channel connected."
+    });
+
+    socket.on("disconnect", (reason) => {
+      logInfo("socket_disconnected", {
+        socketId: socket.id,
+        reason
+      });
     });
   });
 
@@ -28,6 +40,8 @@ export function getSocketServer() {
 }
 
 export function emitDashboardUpdated() {
+  logInfo("dashboard_update_emitted");
+
   io?.emit(DASHBOARD_UPDATED_EVENT, {
     type: "daily-log-created",
     occurredAt: new Date().toISOString()

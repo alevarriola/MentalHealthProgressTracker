@@ -1,4 +1,5 @@
 import { frontendEnv } from "./env";
+import { logFrontendError, logFrontendInfo } from "./logger";
 
 export const apiBaseUrl = frontendEnv.apiBaseUrl;
 
@@ -31,6 +32,7 @@ export async function apiRequest<T>(
   options: ApiRequestOptions = {}
 ): Promise<T> {
   const { body, headers, ...rest } = options;
+  const method = rest.method ?? "GET";
   const isJsonBody =
     body !== null &&
     body !== undefined &&
@@ -64,8 +66,20 @@ export async function apiRequest<T>(
       // Ignore non-JSON error bodies and fall back to a generic message.
     }
 
+    logFrontendError("api_request_failed", {
+      method,
+      path,
+      statusCode: response.status
+    });
+
     throw new ApiError(message, response.status);
   }
+
+  logFrontendInfo("api_request_succeeded", {
+    method,
+    path,
+    statusCode: response.status
+  });
 
   if (response.status === 204) {
     return undefined as T;

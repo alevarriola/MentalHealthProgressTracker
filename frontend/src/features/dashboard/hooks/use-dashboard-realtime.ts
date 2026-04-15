@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { io } from "socket.io-client";
 import { socketUrl } from "../../../lib/api";
+import {
+  logFrontendInfo,
+  logFrontendWarn
+} from "../../../lib/logger";
 import { dailyLogsQueryKey } from "../../daily-log/hooks/use-create-daily-log";
 
 const DASHBOARD_UPDATED_EVENT = "dashboard:updated";
@@ -21,13 +25,16 @@ export function useDashboardRealtime() {
 
     const handleConnect = () => {
       setIsConnected(true);
+      logFrontendInfo("socket_connected");
     };
 
     const handleDisconnect = () => {
       setIsConnected(false);
+      logFrontendWarn("socket_disconnected");
     };
 
     const handleDashboardUpdated = () => {
+      logFrontendInfo("dashboard_update_received");
       queryClient.invalidateQueries({
         queryKey: dailyLogsQueryKey
       });
