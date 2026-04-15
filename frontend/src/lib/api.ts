@@ -1,5 +1,66 @@
-export const apiBaseUrl =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000/api";
+import { frontendEnv } from "./env";
 
-export const socketUrl =
-  import.meta.env.VITE_SOCKET_URL ?? "http://localhost:4000";
+export const apiBaseUrl = frontendEnv.apiBaseUrl;
+
+export const socketUrl = frontendEnv.socketUrl;
+
+type ApiRequestOptions = RequestInit & {
+  body?: BodyInit | Record<string, unknown> | null;
+};
+
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+export async function apiRequest<T>(
+  path: string,
+  options: ApiRequestOptions = {}
+): Promise<T> {
+  const { body, headers, ...rest } = options;
+  const isJsonBody =
+    body !== null &&
+    body !== undefined &&
+    typeof body === "object" &&
+    !(body instanceof FormData) &&
+    !(body instanceof URLSearchParams) &&
+    !(body instanceof Blob) &&
+    !(body instanceof ArrayBuffer);
+
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    credentials: "include",
+    headers: {
+      ...(isJsonBody ? { "Content-Type": "application/json" } : {}),
+      ...headers
+    },
+    body: isJsonBody ? JSON.stringify(body) : (body as BodyInit | null | undefined),
+    ...rest
+  });
+
+  if (!response.ok) {
+    let message = `Request failed with status ${response.status}`;
+
+    try {
+      const errorPayload = (await response.json()) as { error?: string };
+
+      if (errorPayload.error) {
+        message = errorPayload.error;
+      }
+    } catch {
+      // Ignore non-JSON error bodies and fall back to a generic message.
+    }
+
+    throw new ApiError(message, response.status);
+  }
+
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return (await response.json()) as T;
+}

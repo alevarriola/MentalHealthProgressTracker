@@ -1,0 +1,49 @@
+import { Link } from "react-router-dom";
+import { useAuthQuery, useLogoutMutation } from "../hooks/use-auth";
+
+export function AuthStatus() {
+  const { data, isLoading } = useAuthQuery();
+  const logoutMutation = useLogoutMutation();
+
+  if (isLoading) {
+    return <span className="auth-chip">Checking session...</span>;
+  }
+
+  if (!data?.user) {
+    return (
+      <Link className="button button-secondary button-compact" to="/login">
+        Sign in
+      </Link>
+    );
+  }
+
+  return (
+    <div className="auth-profile">
+      {data.user.avatarUrl ? (
+        <img
+          alt={data.user.displayName ?? data.user.email}
+          className="avatar"
+          src={data.user.avatarUrl}
+        />
+      ) : (
+        <div className="avatar avatar-fallback">
+          {(data.user.displayName ?? data.user.email).slice(0, 1).toUpperCase()}
+        </div>
+      )}
+
+      <div className="auth-copy">
+        <strong>{data.user.displayName ?? "Signed in"}</strong>
+        <span>{data.user.email}</span>
+      </div>
+
+      <button
+        className="button button-secondary button-compact"
+        disabled={logoutMutation.isPending}
+        onClick={() => logoutMutation.mutate()}
+        type="button"
+      >
+        {logoutMutation.isPending ? "Signing out..." : "Logout"}
+      </button>
+    </div>
+  );
+}

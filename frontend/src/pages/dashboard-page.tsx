@@ -1,4 +1,8 @@
+import { useAuthQuery } from "../features/auth/hooks/use-auth";
+
 export function DashboardPage() {
+  const { data } = useAuthQuery();
+
   return (
     <section className="page">
       <div className="hero">
@@ -13,6 +17,13 @@ export function DashboardPage() {
           and render the first chart cards once we build the daily log and data
           visualization milestones.
         </p>
+
+        {data?.user ? (
+          <div className="hero-user">
+            <strong>{data.user.displayName ?? data.user.email}</strong>
+            <span>{data.user.email}</span>
+          </div>
+        ) : null}
       </div>
 
       <div className="grid grid-three">

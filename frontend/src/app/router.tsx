@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppShell } from "../components/layout/app-shell";
+import { ProtectedRoute } from "../features/auth/components/protected-route";
+import { PublicOnlyRoute } from "../features/auth/components/public-only-route";
 import { DashboardPage } from "../pages/dashboard-page";
 import { HomePage } from "../pages/home-page";
 import { LoginPage } from "../pages/login-page";
@@ -16,11 +18,19 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "login",
-        element: <LoginPage />
+        element: (
+          <PublicOnlyRoute>
+            <LoginPage />
+          </PublicOnlyRoute>
+        )
       },
       {
         path: "dashboard",
-        element: <DashboardPage />
+        element: (
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        )
       }
     ]
   },

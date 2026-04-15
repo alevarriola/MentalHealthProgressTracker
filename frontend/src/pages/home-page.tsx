@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { useAuthQuery } from "../features/auth/hooks/use-auth";
 
 export function HomePage() {
+  const { data } = useAuthQuery();
+  const ctaTo = data?.user ? "/dashboard" : "/login";
+  const ctaLabel = data?.user ? "Go to dashboard" : "Start with authentication";
+
   return (
     <section className="page">
       <div className="hero">
@@ -17,8 +22,8 @@ export function HomePage() {
         </p>
 
         <div className="hero-actions">
-          <Link className="button button-primary" to="/login">
-            Start with authentication
+          <Link className="button button-primary" to={ctaTo}>
+            {ctaLabel}
           </Link>
           <Link className="button button-secondary" to="/dashboard">
             Preview dashboard shell
@@ -31,7 +36,8 @@ export function HomePage() {
           <h2>Auth-ready</h2>
           <p>
             Router and providers are in place so the Google login flow can plug
-            into the backend immediately.
+            into the backend immediately, including protected routes and session
+            state.
           </p>
         </article>
 
