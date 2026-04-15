@@ -2,6 +2,8 @@ import type { Server as HttpServer } from "node:http";
 import { Server } from "socket.io";
 import { env } from "../config/env.js";
 
+export const DASHBOARD_UPDATED_EVENT = "dashboard:updated";
+
 let io: Server | null = null;
 
 export function createSocketServer(httpServer: HttpServer) {
@@ -23,4 +25,11 @@ export function createSocketServer(httpServer: HttpServer) {
 
 export function getSocketServer() {
   return io;
+}
+
+export function emitDashboardUpdated() {
+  io?.emit(DASHBOARD_UPDATED_EVENT, {
+    type: "daily-log-created",
+    occurredAt: new Date().toISOString()
+  });
 }

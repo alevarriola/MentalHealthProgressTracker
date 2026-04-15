@@ -1,3 +1,4 @@
+import { emitDashboardUpdated } from "../../app/socket.js";
 import { AppError } from "../../utils/app-error.js";
 import {
   createDailyLog,
@@ -43,7 +44,11 @@ export async function createUserDailyLog(
     date: logDate
   });
 
-  return serializeDailyLog(createdLog);
+  const serializedLog = serializeDailyLog(createdLog);
+
+  emitDashboardUpdated();
+
+  return serializedLog;
 }
 
 export async function listUserDailyLogs(
