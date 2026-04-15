@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthQuery, useLogoutMutation } from "../hooks/use-auth";
+import { GoogleLoginButton } from "./google-login-button";
 
 export function AuthStatus() {
   const { data, isLoading } = useAuthQuery();
@@ -11,7 +12,12 @@ export function AuthStatus() {
   }
 
   if (!data?.user) {
-    return <span className="auth-chip">Not signed in</span>;
+    return (
+      <GoogleLoginButton
+        className="button-compact topbar-signin"
+        label="Continue with Google"
+      />
+    );
   }
 
   return (
@@ -39,7 +45,7 @@ export function AuthStatus() {
         onClick={() =>
           logoutMutation.mutate(undefined, {
             onSuccess: () => {
-              navigate("/login", { replace: true });
+              navigate("/", { replace: true });
             }
           })
         }

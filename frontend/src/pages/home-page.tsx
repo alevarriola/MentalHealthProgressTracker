@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
+import { GoogleLoginButton } from "../features/auth/components/google-login-button";
 import { useAuthQuery } from "../features/auth/hooks/use-auth";
 
 export function HomePage() {
   const { data } = useAuthQuery();
-  const ctaTo = data?.user ? "/dashboard" : "/login";
-  const ctaLabel = data?.user ? "Open dashboard" : "Start check-in";
 
   return (
     <section className="page">
@@ -21,12 +20,19 @@ export function HomePage() {
         </p>
 
         <div className="hero-actions">
-          <Link className="button button-primary" to={ctaTo}>
-            {ctaLabel}
-          </Link>
-          <Link className="button button-secondary" to="/dashboard">
-            View dashboard
-          </Link>
+          {data?.user ? (
+            <Link className="button button-primary" to="/dashboard">
+              Open dashboard
+            </Link>
+          ) : (
+            <GoogleLoginButton label="Start check-in" />
+          )}
+
+          {data?.user ? (
+            <Link className="button button-secondary" to="/dashboard">
+              View trends
+            </Link>
+          ) : null}
         </div>
       </div>
 

@@ -1,9 +1,8 @@
 import type { PropsWithChildren } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuthQuery } from "../hooks/use-auth";
 
 export function ProtectedRoute({ children }: PropsWithChildren) {
-  const location = useLocation();
   const { data, isLoading } = useAuthQuery();
 
   if (isLoading) {
@@ -11,16 +10,14 @@ export function ProtectedRoute({ children }: PropsWithChildren) {
       <section className="page">
         <div className="panel">
           <h1>Checking your session...</h1>
-          <p className="list-note">
-            We are confirming your Google login before loading protected content.
-          </p>
+          <p className="list-note">Please wait a moment while we open your private view.</p>
         </div>
       </section>
     );
   }
 
   if (!data?.user) {
-    return <Navigate replace state={{ from: location }} to="/login" />;
+    return <Navigate replace to="/" />;
   }
 
   return <>{children}</>;

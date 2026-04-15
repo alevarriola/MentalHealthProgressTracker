@@ -1,11 +1,14 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthStatus } from "../../features/auth/components/auth-status";
+import { useAuthQuery } from "../../features/auth/hooks/use-auth";
 
 function navClassName({ isActive }: { isActive: boolean }) {
   return isActive ? "nav-link active" : "nav-link";
 }
 
 export function AppShell() {
+  const { data } = useAuthQuery();
+
   return (
     <div className="shell">
       <header className="topbar">
@@ -19,12 +22,11 @@ export function AppShell() {
             <NavLink className={navClassName} to="/">
               Home
             </NavLink>
-            <NavLink className={navClassName} to="/login">
-              Login
-            </NavLink>
-            <NavLink className={navClassName} to="/dashboard">
-              Dashboard
-            </NavLink>
+            {data?.user ? (
+              <NavLink className={navClassName} to="/dashboard">
+                Dashboard
+              </NavLink>
+            ) : null}
           </nav>
 
           <AuthStatus />

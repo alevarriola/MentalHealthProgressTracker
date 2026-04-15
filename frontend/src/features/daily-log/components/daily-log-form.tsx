@@ -318,7 +318,7 @@ export function DailyLogForm() {
 
         {mutation.isSuccess && !serverMessage && isSubmitSuccessful ? (
           <div className="form-alert success">
-            Daily log saved. Your dashboard can refresh from this new entry.
+            Daily log saved. Your dashboard will update from this new entry.
           </div>
         ) : null}
 
@@ -331,9 +331,7 @@ export function DailyLogForm() {
             {mutation.isPending ? "Saving today's entry..." : "Save daily log"}
           </button>
 
-          <p className="list-note">
-            If you already saved this date, the backend will gently prevent duplicates.
-          </p>
+          <p className="list-note">One check-in per date helps keep the timeline clear.</p>
         </div>
       </form>
     </section>
