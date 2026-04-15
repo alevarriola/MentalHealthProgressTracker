@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { ApiError } from "../../../lib/api";
 import {
@@ -32,14 +32,33 @@ type FieldProps = {
   label: string;
   helper: string;
   error?: string;
+  tooltip?: string;
   children: ReactNode;
 };
 
-function Field({ label, helper, error, children }: FieldProps) {
+function Field({ label, helper, error, tooltip, children }: FieldProps) {
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+
   return (
     <label className="form-field">
-      <span className="field-label">{label}</span>
+      <span className="field-label-row">
+        <span className="field-label">{label}</span>
+        {tooltip ? (
+          <button
+            aria-expanded={isTooltipOpen}
+            className="info-trigger"
+            onClick={(event) => {
+              event.preventDefault();
+              setIsTooltipOpen((current) => !current);
+            }}
+            type="button"
+          >
+            ?
+          </button>
+        ) : null}
+      </span>
       <span className="field-help">{helper}</span>
+      {isTooltipOpen && tooltip ? <span className="field-tooltip">{tooltip}</span> : null}
       {children}
       {error ? <span className="field-error">{error}</span> : null}
     </label>
@@ -51,6 +70,7 @@ type SliderFieldProps = {
   helper: string;
   error?: string;
   id: keyof CreateDailyLogInput;
+  tooltip?: string;
   min?: number;
   max?: number;
   register: ReturnType<typeof useForm<CreateDailyLogInput>>["register"];
@@ -62,13 +82,14 @@ function SliderField({
   helper,
   error,
   id,
+  tooltip,
   min = 1,
   max = 10,
   register,
   watchValue
 }: SliderFieldProps) {
   return (
-    <Field error={error} helper={helper} label={label}>
+    <Field error={error} helper={helper} label={label} tooltip={tooltip}>
       <div className="range-row">
         <input
           {...register(id, { valueAsNumber: true })}
@@ -86,6 +107,7 @@ function SliderField({
 
 export function DailyLogForm() {
   const mutation = useCreateDailyLogMutation();
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -139,11 +161,62 @@ export function DailyLogForm() {
           </p>
         </div>
 
-        <span className="status-badge">
-          <span className="status-dot" />
-          Usually under 2 minutes
-        </span>
+        <div className="form-heading-actions">
+          <button
+            className="button button-secondary button-compact"
+            onClick={() => setIsGuideOpen(true)}
+            type="button"
+          >
+            How this check-in works
+          </button>
+
+          <span className="status-badge">
+            <span className="status-dot" />
+            Usually under 2 minutes
+          </span>
+        </div>
       </div>
+
+      {isGuideOpen ? (
+        <div
+          aria-modal="true"
+          className="modal-backdrop"
+          onClick={() => setIsGuideOpen(false)}
+          role="dialog"
+        >
+          <div
+            className="modal-card"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h3>How to use this daily check-in</h3>
+                <p className="list-note">
+                  Aim for consistency, not perfection. A quick honest snapshot is enough.
+                </p>
+              </div>
+
+              <button
+                aria-label="Close guide"
+                className="modal-close"
+                onClick={() => setIsGuideOpen(false)}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <ul className="mini-list">
+                <li>Use the 1-10 sliders as relative anchors from your own recent days.</li>
+                <li>Optional text fields are there only if extra context helps you later.</li>
+                <li>One entry per date keeps the timeline easier to read and compare.</li>
+                <li>If a day feels unusual or intense, a short note can help explain the spike.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <form className="daily-log-form" onSubmit={onSubmit}>
         <section className="form-section">
@@ -195,6 +268,7 @@ export function DailyLogForm() {
               id="moodRating"
               label="Mood"
               register={register}
+              tooltip="Think in broad terms: 1-3 very low, 4-6 mixed or neutral, 7-10 mostly positive."
               watchValue={watchedRatings[0]}
             />
 
@@ -204,6 +278,7 @@ export function DailyLogForm() {
               id="anxietyLevel"
               label="Anxiety"
               register={register}
+              tooltip="Use higher numbers when anxiety felt more intrusive, persistent, or harder to redirect."
               watchValue={watchedRatings[1]}
             />
 
@@ -213,6 +288,7 @@ export function DailyLogForm() {
               id="sleepQuality"
               label="Sleep quality"
               register={register}
+              tooltip="Rate how rested you felt after sleeping, not just how many hours you spent in bed."
               watchValue={watchedRatings[2]}
             />
 
@@ -231,6 +307,7 @@ export function DailyLogForm() {
               id="stressLevel"
               label="Stress"
               register={register}
+              tooltip="Higher scores fit days that felt tense, overloaded, or mentally crowded."
               watchValue={watchedRatings[4]}
             />
 

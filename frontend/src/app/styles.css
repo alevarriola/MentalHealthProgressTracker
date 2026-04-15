@@ -332,6 +332,14 @@ select {
   margin-bottom: 1.5rem;
 }
 
+.form-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .daily-log-form {
   display: grid;
   gap: 1.4rem;
@@ -371,14 +379,41 @@ select {
   gap: 0.45rem;
 }
 
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
 .field-label {
   font-weight: 700;
   color: #17314b;
 }
 
+.info-trigger {
+  width: 1.55rem;
+  height: 1.55rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(245, 178, 45, 0.18);
+  color: var(--accent-strong);
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .field-help {
   color: var(--ink-muted);
   font-size: 0.94rem;
+}
+
+.field-tooltip {
+  padding: 0.75rem 0.9rem;
+  border-radius: 16px;
+  background: rgba(255, 248, 233, 0.98);
+  border: 1px solid rgba(245, 178, 45, 0.22);
+  color: var(--accent-strong);
+  font-size: 0.92rem;
+  animation: fade-slide-in 160ms ease;
 }
 
 .text-input,
@@ -460,6 +495,74 @@ select {
   background: rgba(255, 238, 236, 0.96);
   border-color: rgba(162, 61, 57, 0.18);
   color: #a23d39;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(25, 42, 39, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fade-in 160ms ease;
+}
+
+.modal-card {
+  width: min(36rem, 100%);
+  background: rgba(255, 250, 244, 0.98);
+  border: 1px solid rgba(47, 98, 90, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 28px 60px rgba(25, 42, 39, 0.2);
+  padding: 1.2rem;
+  animation: fade-slide-in 180ms ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
+.modal-body {
+  margin-top: 1rem;
+}
+
+.modal-close {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@keyframes fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .form-actions {
@@ -617,6 +720,11 @@ select {
 
   .auth-copy {
     flex: 1;
+  }
+
+  .form-heading-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .form-actions {
