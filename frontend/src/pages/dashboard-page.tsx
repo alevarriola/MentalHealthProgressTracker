@@ -1,4 +1,5 @@
 import { useAuthQuery } from "../features/auth/hooks/use-auth";
+import { DailyLogForm } from "../features/daily-log/components/daily-log-form";
 
 export function DashboardPage() {
   const { data } = useAuthQuery();
@@ -8,14 +9,13 @@ export function DashboardPage() {
       <div className="hero">
         <div className="status-badge">
           <span className="status-dot" />
-          Dashboard scaffold
+          Personal dashboard
         </div>
 
-        <h1>Weekly and monthly trend views will land here next.</h1>
+        <h1>Daily check-in first, trends right after.</h1>
         <p>
-          This route will connect to `/api/logs`, subscribe to realtime updates
-          and render the first chart cards once we build the daily log and data
-          visualization milestones.
+          Record today&apos;s signals below. Trend cards will fill in as your
+          entries start building up.
         </p>
 
         {data?.user ? (
@@ -26,29 +26,25 @@ export function DashboardPage() {
         ) : null}
       </div>
 
+      <DailyLogForm />
+
       <div className="grid grid-three">
         <article className="panel">
           <h2>Mood</h2>
-          <p className="list-note">
-            Placeholder card for the first trend line.
-          </p>
-          <div className="stat">--</div>
+          <p className="list-note">No trend data yet.</p>
+          <div className="stat">Soon</div>
         </article>
 
         <article className="panel">
           <h2>Sleep</h2>
-          <p className="list-note">
-            Placeholder card for average sleep and quality.
-          </p>
-          <div className="stat">--</div>
+          <p className="list-note">Your first entries will shape this view.</p>
+          <div className="stat">Soon</div>
         </article>
 
         <article className="panel">
           <h2>Stress</h2>
-          <p className="list-note">
-            Placeholder card for a weekly or monthly snapshot.
-          </p>
-          <div className="stat">--</div>
+          <p className="list-note">A clearer weekly snapshot will appear here.</p>
+          <div className="stat">Soon</div>
         </article>
       </div>
     </section>

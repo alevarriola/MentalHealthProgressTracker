@@ -1,20 +1,17 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthQuery, useLogoutMutation } from "../hooks/use-auth";
 
 export function AuthStatus() {
   const { data, isLoading } = useAuthQuery();
   const logoutMutation = useLogoutMutation();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <span className="auth-chip">Checking session...</span>;
   }
 
   if (!data?.user) {
-    return (
-      <Link className="button button-secondary button-compact" to="/login">
-        Sign in
-      </Link>
-    );
+    return <span className="auth-chip">Not signed in</span>;
   }
 
   return (
@@ -39,7 +36,13 @@ export function AuthStatus() {
       <button
         className="button button-secondary button-compact"
         disabled={logoutMutation.isPending}
-        onClick={() => logoutMutation.mutate()}
+        onClick={() =>
+          logoutMutation.mutate(undefined, {
+            onSuccess: () => {
+              navigate("/login", { replace: true });
+            }
+          })
+        }
         type="button"
       >
         {logoutMutation.isPending ? "Signing out..." : "Logout"}

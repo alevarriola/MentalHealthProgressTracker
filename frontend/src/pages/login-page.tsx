@@ -6,13 +6,13 @@ export function LoginPage() {
       <div className="hero">
         <div className="status-badge">
           <span className="status-dot" />
-          Google OAuth backend connected
+          Secure sign-in
         </div>
 
         <h1>Sign in before logging daily progress.</h1>
         <p>
-          The backend authentication flow is already live. After signing in, the
-          app keeps your session and unlocks the protected dashboard flow.
+          Continue with Google to keep your daily entries tied to your own
+          account and unlock the private dashboard area.
         </p>
 
         <div className="button-row">
@@ -20,9 +20,9 @@ export function LoginPage() {
         </div>
 
         <ul className="mini-list">
-          <li>Google handles authentication and redirects back to the app.</li>
-          <li>Your session cookie stays on the backend for safer auth handling.</li>
-          <li>Protected routes only render when `/api/auth/me` confirms the user.</li>
+          <li>Your entries stay behind a signed-in session.</li>
+          <li>You can come back later and keep building the same history.</li>
+          <li>The dashboard opens only after your session is confirmed.</li>
         </ul>
       </div>
     </section>

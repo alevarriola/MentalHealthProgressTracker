@@ -4,21 +4,20 @@ import { useAuthQuery } from "../features/auth/hooks/use-auth";
 export function HomePage() {
   const { data } = useAuthQuery();
   const ctaTo = data?.user ? "/dashboard" : "/login";
-  const ctaLabel = data?.user ? "Go to dashboard" : "Start with authentication";
+  const ctaLabel = data?.user ? "Open dashboard" : "Start check-in";
 
   return (
     <section className="page">
       <div className="hero">
         <div className="status-badge">
           <span className="status-dot" />
-          Frontend bootstrap ready
+          Daily reflection space
         </div>
 
         <h1>Track daily signals with a calmer, clearer flow.</h1>
         <p>
-          This frontend shell is ready for Google auth, daily logs, charts and
-          real-time dashboard refreshes without needing to restructure the app
-          later.
+          A simple space to log how the day felt, notice patterns over time and
+          keep the experience gentle rather than overwhelming.
         </p>
 
         <div className="hero-actions">
@@ -26,34 +25,33 @@ export function HomePage() {
             {ctaLabel}
           </Link>
           <Link className="button button-secondary" to="/dashboard">
-            Preview dashboard shell
+            View dashboard
           </Link>
         </div>
       </div>
 
       <div className="grid grid-three">
         <article className="panel">
-          <h2>Auth-ready</h2>
+          <h2>Private by default</h2>
           <p>
-            Router and providers are in place so the Google login flow can plug
-            into the backend immediately, including protected routes and session
-            state.
+            Sign-in keeps personal data behind an authenticated flow before any
+            health entries or trends are shown.
           </p>
         </article>
 
         <article className="panel">
-          <h2>Feature-oriented</h2>
+          <h2>Fast daily entry</h2>
           <p>
-            The structure leaves room for separate auth, daily-log and dashboard
-            modules without tangling logic into pages.
+            The form is designed to be short enough for a regular habit instead
+            of feeling like a long clinical questionnaire.
           </p>
         </article>
 
         <article className="panel">
-          <h2>Realtime-ready</h2>
+          <h2>Trend-focused</h2>
           <p>
-            The app is prepared to subscribe to `dashboard:updated` and refetch
-            chart data when new logs arrive.
+            The dashboard will surface a few meaningful signals rather than too
+            many charts competing for attention.
           </p>
         </article>
       </div>

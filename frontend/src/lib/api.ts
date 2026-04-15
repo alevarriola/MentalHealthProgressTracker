@@ -4,8 +4,16 @@ export const apiBaseUrl = frontendEnv.apiBaseUrl;
 
 export const socketUrl = frontendEnv.socketUrl;
 
-type ApiRequestOptions = RequestInit & {
-  body?: BodyInit | Record<string, unknown> | null;
+type JsonBody =
+  | Record<string, unknown>
+  | Array<Record<string, unknown>>
+  | string
+  | number
+  | boolean
+  | null;
+
+type ApiRequestOptions = Omit<RequestInit, "body"> & {
+  body?: BodyInit | JsonBody | null;
 };
 
 export class ApiError extends Error {
@@ -27,6 +35,7 @@ export async function apiRequest<T>(
     body !== null &&
     body !== undefined &&
     typeof body === "object" &&
+    !ArrayBuffer.isView(body) &&
     !(body instanceof FormData) &&
     !(body instanceof URLSearchParams) &&
     !(body instanceof Blob) &&

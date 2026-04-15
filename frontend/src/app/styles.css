@@ -212,6 +212,142 @@ select {
   padding: 1.4rem;
 }
 
+.form-panel {
+  padding: 1.6rem;
+}
+
+.form-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.daily-log-form {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.form-section {
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background: rgba(247, 245, 239, 0.72);
+}
+
+.form-section-copy {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.form-section-copy h3 {
+  margin: 0;
+}
+
+.form-section-copy p {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.field-label {
+  font-weight: 700;
+  color: #17314b;
+}
+
+.field-help {
+  color: var(--ink-muted);
+  font-size: 0.94rem;
+}
+
+.text-input,
+.text-area {
+  width: 100%;
+  border: 1px solid rgba(19, 34, 56, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.95rem 1rem;
+  color: #17314b;
+}
+
+.text-input:focus,
+.text-area:focus,
+.range-input:focus {
+  outline: 2px solid rgba(29, 108, 99, 0.2);
+  outline-offset: 2px;
+}
+
+.text-area {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.range-input {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+.range-value {
+  min-width: 2.75rem;
+  text-align: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.field-error {
+  color: #a23d39;
+  font-size: 0.92rem;
+}
+
+.form-alert {
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+
+.form-alert.success {
+  background: rgba(215, 235, 230, 0.94);
+  border-color: rgba(29, 108, 99, 0.16);
+  color: var(--accent);
+}
+
+.form-alert.error {
+  background: rgba(255, 238, 236, 0.96);
+  border-color: rgba(162, 61, 57, 0.18);
+  color: #a23d39;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .stat {
   font-size: 2rem;
   font-weight: 700;
@@ -324,6 +460,10 @@ select {
     grid-template-columns: 1fr;
   }
 
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
   .topbar {
     align-items: flex-start;
     flex-direction: column;
@@ -342,5 +482,9 @@ select {
 
   .auth-copy {
     flex: 1;
+  }
+
+  .form-actions {
+    align-items: stretch;
   }
 }
