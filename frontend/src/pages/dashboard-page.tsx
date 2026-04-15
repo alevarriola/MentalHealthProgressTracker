@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useAuthQuery } from "../features/auth/hooks/use-auth";
 import { DailyLogForm } from "../features/daily-log/components/daily-log-form";
 import { TrendsChart } from "../features/dashboard/components/trends-chart";
@@ -12,13 +13,30 @@ import type { DashboardRange } from "../features/dashboard/types";
 
 export function DashboardPage() {
   const { data } = useAuthQuery();
+  const location = useLocation();
   const [range, setRange] = useState<DashboardRange>("weekly");
   const logsQuery = useDashboardLogs(range);
   const realtime = useDashboardRealtime();
+  const trendsSectionRef = useRef<HTMLElement | null>(null);
 
   const logs = logsQuery.data?.logs ?? [];
   const summary = useMemo(() => buildDashboardSummary(logs), [logs]);
   const trendData = useMemo(() => buildTrendPoints(logs, range), [logs, range]);
+
+  useEffect(() => {
+    if (location.hash !== "#trends-overview") {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      trendsSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.hash]);
 
   return (
     <section className="page">
@@ -46,7 +64,11 @@ export function DashboardPage() {
 
       <DailyLogForm />
 
-      <section className="panel dashboard-panel">
+      <section
+        className="panel dashboard-panel"
+        id="trends-overview"
+        ref={trendsSectionRef}
+      >
         <div className="dashboard-header">
           <div>
             <h2>Trends overview</h2>

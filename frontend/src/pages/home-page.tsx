@@ -37,7 +37,7 @@ export function HomePage() {
           )}
 
           {data?.user ? (
-            <Link className="button button-secondary" to="/dashboard">
+            <Link className="button button-secondary" to="/dashboard#trends-overview">
               View trends
             </Link>
           ) : null}
