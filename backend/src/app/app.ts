@@ -4,6 +4,7 @@ import session from "express-session";
 import { env } from "../config/env.js";
 import { errorHandler } from "../middleware/error-handler.js";
 import { notFoundHandler } from "../middleware/not-found.js";
+import { passport } from "../modules/auth/auth.passport.js";
 import { apiRouter } from "../routes/index.js";
 
 export function createApp() {
@@ -30,6 +31,8 @@ export function createApp() {
       }
     })
   );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.use("/api", apiRouter);
 
