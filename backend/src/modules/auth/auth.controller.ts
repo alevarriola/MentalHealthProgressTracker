@@ -5,12 +5,13 @@ import { asyncHandler } from "../../utils/async-handler.js";
 import { getUserSessionProfile } from "./auth.service.js";
 
 export const startGoogleAuth = passport.authenticate("google", {
-  scope: ["profile", "email"]
+  scope: ["profile", "email"],
+  prompt: "select_account"
 });
 
 export const handleGoogleCallback = [
   passport.authenticate("google", {
-    failureRedirect: `${env.CLIENT_URL}/login?error=oauth_failed`,
+    failureRedirect: `${env.CLIENT_URL}/?error=oauth_failed`,
     session: true
   }),
   (_request: Request, response: Response) => {

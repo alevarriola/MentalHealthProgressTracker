@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { GoogleLoginButton } from "../features/auth/components/google-login-button";
 import { useAuthQuery } from "../features/auth/hooks/use-auth";
 
 export function HomePage() {
   const { data } = useAuthQuery();
+  const [searchParams] = useSearchParams();
+  const authError = searchParams.get("error");
 
   return (
     <section className="page">
@@ -18,6 +20,12 @@ export function HomePage() {
           A simple space to log how the day felt, notice patterns over time and
           keep the experience gentle rather than overwhelming.
         </p>
+
+        {authError === "oauth_failed" ? (
+          <div className="inline-alert error">
+            Sign-in could not be completed. Please try again and choose an account.
+          </div>
+        ) : null}
 
         <div className="hero-actions">
           {data?.user ? (

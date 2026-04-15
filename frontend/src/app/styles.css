@@ -436,6 +436,14 @@ select {
   font-weight: 500;
 }
 
+.inline-alert {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  border: 1px solid transparent;
+  max-width: 42rem;
+}
+
 .form-alert.success {
   background: rgba(215, 235, 230, 0.94);
   border-color: rgba(29, 108, 99, 0.16);
@@ -443,6 +451,12 @@ select {
 }
 
 .form-alert.error {
+  background: rgba(255, 238, 236, 0.96);
+  border-color: rgba(162, 61, 57, 0.18);
+  color: #a23d39;
+}
+
+.inline-alert.error {
   background: rgba(255, 238, 236, 0.96);
   border-color: rgba(162, 61, 57, 0.18);
   color: #a23d39;
