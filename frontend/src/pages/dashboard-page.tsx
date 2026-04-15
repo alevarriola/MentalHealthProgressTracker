@@ -3,6 +3,7 @@ import { useAuthQuery } from "../features/auth/hooks/use-auth";
 import { DailyLogForm } from "../features/daily-log/components/daily-log-form";
 import { TrendsChart } from "../features/dashboard/components/trends-chart";
 import { useDashboardLogs } from "../features/dashboard/hooks/use-dashboard-logs";
+import { useDashboardRealtime } from "../features/dashboard/hooks/use-dashboard-realtime";
 import {
   buildDashboardSummary,
   buildTrendPoints
@@ -13,6 +14,7 @@ export function DashboardPage() {
   const { data } = useAuthQuery();
   const [range, setRange] = useState<DashboardRange>("weekly");
   const logsQuery = useDashboardLogs(range);
+  const realtime = useDashboardRealtime();
 
   const logs = logsQuery.data?.logs ?? [];
   const summary = useMemo(() => buildDashboardSummary(logs), [logs]);
@@ -51,21 +53,34 @@ export function DashboardPage() {
             </p>
           </div>
 
-          <div className="range-toggle" aria-label="Trend range selector">
-            <button
-              className={range === "weekly" ? "toggle-chip active" : "toggle-chip"}
-              onClick={() => setRange("weekly")}
-              type="button"
+          <div className="dashboard-controls">
+            <span
+              className={
+                realtime.isConnected
+                  ? "status-badge realtime-badge online"
+                  : "status-badge realtime-badge"
+              }
             >
-              Weekly
-            </button>
-            <button
-              className={range === "monthly" ? "toggle-chip active" : "toggle-chip"}
-              onClick={() => setRange("monthly")}
-              type="button"
-            >
-              Monthly
-            </button>
+              <span className="status-dot" />
+              {realtime.isConnected ? "Realtime connected" : "Realtime reconnecting"}
+            </span>
+
+            <div className="range-toggle" aria-label="Trend range selector">
+              <button
+                className={range === "weekly" ? "toggle-chip active" : "toggle-chip"}
+                onClick={() => setRange("weekly")}
+                type="button"
+              >
+                Weekly
+              </button>
+              <button
+                className={range === "monthly" ? "toggle-chip active" : "toggle-chip"}
+                onClick={() => setRange("monthly")}
+                type="button"
+              >
+                Monthly
+              </button>
+            </div>
           </div>
         </div>
 

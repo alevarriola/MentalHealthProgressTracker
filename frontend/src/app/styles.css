@@ -244,6 +244,12 @@ select {
   flex-wrap: wrap;
 }
 
+.dashboard-controls {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: end;
+}
+
 .dashboard-header h2,
 .metric-card h3 {
   margin: 0;
@@ -255,6 +261,16 @@ select {
   gap: 0.35rem;
   border-radius: 999px;
   background: rgba(237, 243, 240, 0.92);
+}
+
+.realtime-badge {
+  background: rgba(123, 130, 104, 0.14);
+  color: #667050;
+}
+
+.realtime-badge.online {
+  background: rgba(47, 98, 90, 0.12);
+  color: var(--accent);
 }
 
 .toggle-chip {
@@ -550,6 +566,10 @@ select {
 
   .dashboard-header {
     align-items: stretch;
+  }
+
+  .dashboard-controls {
+    justify-items: stretch;
   }
 
   .range-toggle {
