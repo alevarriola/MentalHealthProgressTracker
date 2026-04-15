@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { ApiError } from "../../../lib/api";
 import {
@@ -38,27 +38,61 @@ type FieldProps = {
 
 function Field({ label, helper, error, tooltip, children }: FieldProps) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const fieldRef = useRef<HTMLLabelElement | null>(null);
+
+  useEffect(() => {
+    if (!isTooltipOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!fieldRef.current?.contains(event.target as Node)) {
+        setIsTooltipOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsTooltipOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isTooltipOpen]);
 
   return (
-    <label className="form-field">
+    <label className="form-field" ref={fieldRef}>
       <span className="field-label-row">
         <span className="field-label">{label}</span>
         {tooltip ? (
-          <button
-            aria-expanded={isTooltipOpen}
-            className="info-trigger"
-            onClick={(event) => {
-              event.preventDefault();
-              setIsTooltipOpen((current) => !current);
-            }}
-            type="button"
-          >
-            ?
-          </button>
+          <span className="field-tooltip-anchor">
+            <button
+              aria-expanded={isTooltipOpen}
+              aria-label={`More guidance for ${label}`}
+              className="info-trigger"
+              onClick={(event) => {
+                event.preventDefault();
+                setIsTooltipOpen((current) => !current);
+              }}
+              type="button"
+            >
+              ?
+            </button>
+            {isTooltipOpen ? (
+              <span className="field-tooltip" role="tooltip">
+                {tooltip}
+              </span>
+            ) : null}
+          </span>
         ) : null}
       </span>
       <span className="field-help">{helper}</span>
-      {isTooltipOpen && tooltip ? <span className="field-tooltip">{tooltip}</span> : null}
       {children}
       {error ? <span className="field-error">{error}</span> : null}
     </label>
@@ -169,11 +203,6 @@ export function DailyLogForm() {
           >
             How this check-in works
           </button>
-
-          <span className="status-badge">
-            <span className="status-dot" />
-            Usually under 2 minutes
-          </span>
         </div>
       </div>
 
@@ -192,7 +221,7 @@ export function DailyLogForm() {
               <div>
                 <h3>How to use this daily check-in</h3>
                 <p className="list-note">
-                  Aim for consistency, not perfection. A quick honest snapshot is enough.
+                  This is designed to stay quick and low-pressure. A short honest snapshot is enough.
                 </p>
               </div>
 
@@ -212,6 +241,7 @@ export function DailyLogForm() {
                 <li>Optional text fields are there only if extra context helps you later.</li>
                 <li>One entry per date keeps the timeline easier to read and compare.</li>
                 <li>If a day feels unusual or intense, a short note can help explain the spike.</li>
+                <li>Most check-ins should take around two minutes once the flow feels familiar.</li>
               </ul>
             </div>
           </div>
@@ -264,7 +294,7 @@ export function DailyLogForm() {
           <div className="form-grid">
             <SliderField
               error={errors.moodRating?.message}
-              helper="1 = very low mood, 10 = very positive mood."
+              helper="1 = low mood, 10 = positive mood."
               id="moodRating"
               label="Mood"
               register={register}
@@ -274,7 +304,7 @@ export function DailyLogForm() {
 
             <SliderField
               error={errors.anxietyLevel?.message}
-              helper="How present or disruptive anxiety felt today."
+              helper="How present anxiety felt today."
               id="anxietyLevel"
               label="Anxiety"
               register={register}
@@ -284,7 +314,7 @@ export function DailyLogForm() {
 
             <SliderField
               error={errors.sleepQuality?.message}
-              helper="How restorative your sleep felt overall."
+              helper="How restorative your sleep felt."
               id="sleepQuality"
               label="Sleep quality"
               register={register}
@@ -303,7 +333,7 @@ export function DailyLogForm() {
 
             <SliderField
               error={errors.stressLevel?.message}
-              helper="How pressured or overwhelmed the day felt."
+              helper="How pressured the day felt."
               id="stressLevel"
               label="Stress"
               register={register}

@@ -23,9 +23,18 @@ export function DashboardPage() {
   return (
     <section className="page">
       <div className="hero">
-        <div className="status-badge">
-          <span className="status-dot" />
-          Personal dashboard
+        <div className="hero-header">
+          <div className="status-badge">
+            <span className="status-dot" />
+            Personal dashboard
+          </div>
+
+          {data?.user ? (
+            <div className="hero-user-inline">
+              <strong>{data.user.displayName ?? data.user.email}</strong>
+              <span>{data.user.email}</span>
+            </div>
+          ) : null}
         </div>
 
         <h1>Daily check-in first, trends right after.</h1>
@@ -33,13 +42,6 @@ export function DashboardPage() {
           Record today&apos;s signals below. Trend cards will fill in as your
           entries start building up.
         </p>
-
-        {data?.user ? (
-          <div className="hero-user">
-            <strong>{data.user.displayName ?? data.user.email}</strong>
-            <span>{data.user.email}</span>
-          </div>
-        ) : null}
       </div>
 
       <DailyLogForm />
